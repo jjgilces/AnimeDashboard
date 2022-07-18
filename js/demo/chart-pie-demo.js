@@ -7,7 +7,7 @@ async function cargarMapa() {
   const response = await fetch('https://api.jikan.moe/v4/top/anime');
   const datos=await response.json();
   const animes= datos['data']
-  const map= new Map();
+
   const labelsT = [];
   const values = [];
   for(anime of animes){

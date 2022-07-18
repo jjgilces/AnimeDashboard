@@ -31,18 +31,21 @@ async function cargarReviews() {
   const response = await fetch('https://api.jikan.moe/v4/anime/'+'55'+'/statistics');
   const datos=await response.json();
   const animes= datos['data']
-  console.log(animes)
-}
-cargarReviews()
-// Area Chart Example
-const crearLineChart = (datos) => {
+  const reviews = animes['scores']
+  const reviewData=[]
+  console.log(reviews)
+  for(review of reviews){
+    reviewData.push(review.votes)
+  }
+  console.log(reviewData)
+  // Area Chart Example
 var ctx = document.getElementById("myAreaChart");
 var myLineChart = new Chart(ctx, {
   type: 'line',
   data: {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", ],
     datasets: [{
-      label: "Earnings",
+      label: "Review",
       lineTension: 0.3,
       backgroundColor: "rgba(78, 115, 223, 0.05)",
       borderColor: "rgba(78, 115, 223, 1)",
@@ -54,7 +57,7 @@ var myLineChart = new Chart(ctx, {
       pointHoverBorderColor: "rgba(78, 115, 223, 1)",
       pointHitRadius: 10,
       pointBorderWidth: 2,
-      data: datos,
+      data: reviewData,
     }],
   },
   options: {
@@ -77,16 +80,16 @@ var myLineChart = new Chart(ctx, {
           drawBorder: false
         },
         ticks: {
-          maxTicksLimit: 7
+          maxTicksLimit: 12
         }
       }],
       yAxes: [{
         ticks: {
-          maxTicksLimit: 5,
+          maxTicksLimit: 10,
           padding: 10,
           // Include a dollar sign in the ticks
           callback: function(value, index, values) {
-            return '$' + number_format(value);
+            return  number_format(value);
           }
         },
         gridLines: {
@@ -117,11 +120,11 @@ var myLineChart = new Chart(ctx, {
       caretPadding: 10,
       callbacks: {
         label: function(tooltipItem, chart) {
-          var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-          return datasetLabel + ': $' + number_format(tooltipItem.yLabel);
+          return 'votes: ' +  number_format(tooltipItem.yLabel);
         }
       }
     }
   }
 });
 }
+cargarReviews();
